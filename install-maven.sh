@@ -12,8 +12,8 @@ set -o nounset
 ##########################################################################
  
 
-MAVEN_VERSION='3.6.0'
-MAVEN_VERSION='3.6.3'
+MAVEN_VERSION="$1"
+#MAVEN_VERSION='3.6.3'
 
 PROJECT='myProject'
 LOG_DIR="./"
@@ -93,6 +93,8 @@ run check_checksum
 
 #### untar ####
 run tar zxf "${TMP_DIR}/$FILE" -C "${USR_BIN}/"
+rm "${TMP_DIR}/$FILE" "${TMP_DIR}/${CHECKSUM_FILE}"
+yum clean metadata
 
 #### symlink ####
 run ln -fs "${USR_BIN}/apache-maven-${MAVEN_VERSION}/bin/mvn" "${USR_BIN}/mvn"

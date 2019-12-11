@@ -1,8 +1,9 @@
 FROM centos:7
 
+RUN yum install java-1.8.0-openjdk-devel.x86_64 wget -y 
 ADD install-maven.sh .
-RUN yum install java-1.8.0-openjdk-devel.x86_64 wget -y && \
-    ./install-maven.sh
+ARG MAVEN_VERSION='3.6.0'
+RUN ./install-maven.sh $MAVEN_VERSION
 
 ARG BUILD_DATE
 ARG VCS_URL
@@ -14,5 +15,6 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 ENV JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
 ENV PATH="${PATH}:${JAVA_HOME}/bin"
-WORKDIR "/livechess"
+ARG WORKING_DIR='/'
+WORKDIR "$WORKING_DIR"
 CMD ["/bin/bash"]
