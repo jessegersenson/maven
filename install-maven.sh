@@ -20,12 +20,20 @@ LOG_DIR="./"
 LOG_FILENAME="${PROJECT}-deploy-$(date -u +'%F%H%M%S').log"
 LOG="${LOG_DIR}/${LOG_FILENAME}"
 
+TMP_DIR="/tmp"
+USR_BIN='/usr/bin'
+FILE="apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+CHECKSUM_FILE="${FILE}.sha512"
+
+export JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
+export PATH=$PATH:$JAVA_HOME/bin
+
 function now(){
     date -u +'%Y-%m-%d-%H%M%S.%3N'
 }
 
 function log(){
-    entry="$1"
+    entry="$@"
     echo "t:$(now) ${entry}" | tee -a "$LOG"
 }
 
@@ -34,22 +42,9 @@ function error() {
 }
 
 function run() {
-    FULL_COMMAND=''
-    for PARTIAL_COMMAND in "$@"
-    do
-      FULL_COMMAND="${FULL_COMMAND}${PARTIAL_COMMAND} "
-    done
-    log "RUN: ${FULL_COMMAND}"
+    log "RUN: $@"            
     "$@"
 }
-
-TMP_DIR="/tmp"
-USR_BIN='/usr/bin'
-FILE="apache-maven-${MAVEN_VERSION}-bin.tar.gz"
-CHECKSUM_FILE="${FILE}.sha512"
-
-export JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk'
-export PATH=$PATH:$JAVA_HOME/bin
 
 function is_linux(){
 	if [[ ! $(uname -s) == 'Linux' ]]
